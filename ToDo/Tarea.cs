@@ -2,8 +2,8 @@ namespace Tareas
 {
     public enum EstadoTarea
     {
-        pendientes = 0;
-        realizadas = 1;
+        pendientes = 0,
+        realizadas = 1
     }
     public class Tarea //m clase tarea tiene 4 objetos
     {
@@ -26,10 +26,10 @@ namespace Tareas
             Estado = Estado;
         }
 
-        publis string mostrar()
+        public string mostrar()
         {
             return TareaID + " | " + Descripcion + " | " + Duracion + " | " + Estado.ToString();
         }
-        
+
     }
 }
