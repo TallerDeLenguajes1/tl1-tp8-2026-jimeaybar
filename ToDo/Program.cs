@@ -1,87 +1,81 @@
-﻿using System.Linq.Expressions;
-using System.Runtime.InteropServices;
-using Tareas;
+﻿using Tareas;
 
-Console.WriteLine("Desea ingresar una tarea?: \n1.Si \n2.No");
+List<Tarea> TareasPendientes = new List<Tarea>();
+List<Tarea> TareasRealizadas = new List<Tarea>();
 
-List <Tarea> tareasPendientes= new ();
-List <Tarea> tareasRealizadas= new ();
+int CantTareas;
+Console.WriteLine("Ingrese la cantidad de tareas:");
+string numero = Console.ReadLine();
+int.TryParse(numero, out CantTareas);
 
-if (int.TryParse(Console.ReadLine(), out int opcion))
+string[] descripcion = {"calculo1", "calculo2", "taller", "arquitectura", "algebra"};
+
+for (int i = 0; i < CantTareas; i++)
 {
-    int id= 1000;
-    while (opcion == 1)
-    {
-        Tarea tareas = new();
-        tareas.TareaId = id;
-        Console.WriteLine("Ingrese una Descripcion:");
-        string? desc = Console.ReadLine();
-        tareas.Descripcion = desc;
-        Console.WriteLine("Ingrese una Duracion:");
-        int dura = int.Parse(Console.ReadLine()!);
+    int duracion;
+    Console.WriteLine($"Ingrese la duracion de la tarea numero{i +1} :");
+    string buff = Console.ReadLine();
+    int.TryParse(buff, out duracion); //hasta aqui pido la duracion de la tarea
+    Tarea nueva = new Tarea(i, descripcion[i], duracion, EstadoTarea.pendientes);
+    // creo una nueva tarea para poder ingresar los datos de tipo tarea y 
+    // luego insertarlos en tareas pendientes
+    TareasPendientes.Add(nueva); //aqui paso los datos a tarea pendiente
+}
+//aqui recorro con un foreach para mostrar lo que tiene TareasPendientes
+foreach (Tarea pendiente in TareasPendientes)
+{
+    Console.WriteLine(pendientes.mostrar());
+}
+    int cambiar;
+do
+{
+    cambiar = 0;
+    Console.WriteLine("Si desea pasar tareas pendientes a REALIZADAS (presione 1):");
+    Console.WriteLine("Si NO desea pasar tareas pendientes a realizadas (presoine 0);");
+    string buff1 = Console.ReadLine();
+    int.TryParse(buff1, out cambiar);
 
-        while(dura < 10 || dura > 100)
+    if (cambiar == 1)
+    {
+        int id;
+        Console.WriteLine("Ingrese el id de la tarea que quiere pasar a realizadas:");
+        string buff2 = Console.ReadLine();
+        int.TryParse(buff2, out id);
+
+        foreach (Tarea pendientes in TareasPendientes) //recorro pendientes para pasar la tarea
         {
-            Console.WriteLine("Ingrese una Duracion valida entre 10 y 100:");
-            dura = int.Parse(Console.ReadLine()!);
-        }
-
-        tareas.Duracion = dura; 
-        tareasPendientes.Add(tareas);
-        id ++;
-
-        Console.WriteLine("Desea ingresar otra tarea?: \n1.Si \n2.No");
-        opcion = int.Parse(Console.ReadLine()!);
-    }
-
-    Console.WriteLine("Tareas Pendientes:\n");
-    foreach (Tarea item in tareasPendientes)
-    {
-        Console.WriteLine($"{item.TareaId}\n{item.Descripcion}\n{item.Duracion}");
-    }
-    
-    Console.WriteLine("Desea realizar alguna tarea?: \n1.Si \n2.No");
-    if(int.TryParse(Console.ReadLine(), out int opcion2))
-    {
-        while (opcion2 == 1)
-        {
-            Console.WriteLine("Ingrese el Id de la tarea a realizar:");
-            int id2 = int.Parse(Console.ReadLine()!);
-            var mover = new Tarea();
-
-            foreach(Tarea item in tareasPendientes)
+            if(pendientes.TareaID == id)
             {
-                if(item.TareaId == id2) {
-                    tareasRealizadas.Add(item);
-                    mover= item;
-                }    
-
+                pendientes.Estado = EstadoTarea.realizadas;
+                TareasRealizadas.Add(pendientes;)
             }
-            tareasPendientes.Remove(mover);
-
-            Console.WriteLine("Desea realizar otra tarea?: \n1.Si \n2.No");
-            opcion2 = int.Parse(Console.ReadLine()!);
         }
-
-        Console.WriteLine("Tareas Realizadas:\n");
-        foreach (Tarea item in tareasRealizadas)
-        {
-            Console.WriteLine($"{item.TareaId}\n{item.Descripcion}\n{item.Duracion}");
-        }
-
-        Console.WriteLine("Tareas Pendientes:\n");
-        foreach (Tarea item in tareasPendientes)
-        {
-            Console.WriteLine("Tareas Pendientes:\n");
-            Console.WriteLine($"{item.TareaId}\n{item.Descripcion}\n{item.Duracion}");
-        }
+        //remuevo afuera, adentro de foreach no funciona
+        TareasPendientes.RemoveAt(id);
     }
 
-}
-else
+} while (cambiar == 1);
+
+Console.WriteLine("Ingrese una descripcion de tarea pendiente a buscar:");
+string buscarDescrip = Console.ReadLine();
+
+foreach (Tarea pendientes in TareasPendientes)
 {
-    Console.WriteLine("Opcion no valida.");
+    if(pendientes.Descripcion == buscarDescrip)
+    {
+        Console.WriteLine(pendientes.mostrar());
+    }
 }
 
+//muestro realizadas y pendientes
+Console.WriteLine("-------REALIZADAS-------");
+foreach(Tarea realizadas in TareasRealizadas)
+{
+    Console.WriteLine(realizadas.mostrar());
+}
 
-
+Console.WriteLine("-------PENDIENTES-------");
+foreach(Tarea pendientes in TareasPendientes)
+{
+    Console.WriteLine(pendientes.mostrar());
+}
